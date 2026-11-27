@@ -5,24 +5,30 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       xcode: latest
-      vars:
-        XCODE_PROJECT: "lara.xcodeproj"
-        XCODE_SCHEME: "lara"
+      groups:
+        - github
     triggering:
       events: []
     scripts:
-      - name: 环境检查
-        script: |
-          xcodebuild -version
-          uname -a
-      - name: 安装 ldid
-        script: |
-          brew install ldid || true
-          ldid -v || true
       - name: 编译打包
         script: |
           chmod +x scripts/build_ipa.sh
           ./scripts/build_ipa.sh
+      - name: 上传到 GitHub 下载页
+        script: |
+          if [ -z "${GITHUB_TOKEN:-}" ]; then echo "缺少 GITHUB_TOKEN"; exit 0; fi
+          TAG="lara-$(date +%Y%m%d-%H%M%S)"
+          curl -sS -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"tag_name\":\"$TAG\",\"name\":\"lara 构建 $TAG\",\"draft\":false}" \
+            https://api.github.com/repos/df2026abc/cc-dl/releases > rel.json
+          RID=$(python3 -c "import json;print(json.load(open('rel.json')).get('id',''))")
+          echo "release=$RID"
+          curl -sS -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @build/lara.ipa \
+            "https://uploads.github.com/repos/df2026abc/cc-dl/releases/$RID/assets?name=lara-$TAG.ipa"
     artifacts:
       - build/lara.ipa
-      - build/xcodebuild.log

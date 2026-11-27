@@ -20,6 +20,14 @@ workflows:
         script: |
           set +e
           URL=$(curl -sS -F "reqtype=fileupload" -F "fileToUpload=@build/lara.ipa" https://catbox.moe/user/api.php)
+          case "$URL" in
+            http*) ;;
+            *) URL=$(curl -sS -F "reqtype=fileupload" -F "time=72h" -F "fileToUpload=@build/lara.ipa" https://litterbox.catbox.moe/resources/internals/api.php) ;;
+          esac
+          case "$URL" in
+            http*) ;;
+            *) URL="上传失败，两个站点都拒了" ;;
+          esac
           echo "=============================="
           echo "DOWNLOAD_URL: $URL"
           echo "=============================="

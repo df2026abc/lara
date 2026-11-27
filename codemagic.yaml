@@ -19,10 +19,10 @@ workflows:
       - name: 上传并给出下载地址
         script: |
           set +e
-          URL=$(curl -sS -F "reqtype=fileupload" -F "fileToUpload=@build/lara.ipa" https://catbox.moe/user/api.php)
+          URL=$(curl -sS -H "User-Agent: Mozilla/5.0" -F "reqtype=fileupload" -F "fileToUpload=@build/lara.ipa" https://catbox.moe/user/api.php)
           case "$URL" in
             http*) ;;
-            *) URL=$(curl -sS -F "reqtype=fileupload" -F "time=72h" -F "fileToUpload=@build/lara.ipa" https://litterbox.catbox.moe/resources/internals/api.php) ;;
+            *) URL=$(curl -sS -H "User-Agent: Mozilla/5.0" -F "reqtype=fileupload" -F "time=72h" -F "fileToUpload=@build/lara.ipa" https://litterbox.catbox.moe/resources/internals/api.php) ;;
           esac
           case "$URL" in
             http*) ;;

@@ -12,12 +12,12 @@ workflows:
         script: |
           chmod +x scripts/build_ipa.sh
           ./scripts/build_ipa.sh
-      - name: 生成公开下载地址
+      - name: 上传并给出下载地址
         script: |
           set +e
           URL=$(curl -sS -F "file=@build/lara.ipa" -F "expires=72" https://0x0.st)
-          echo "=================================================="
-          echo "下载地址: $URL"
-          echo "=================================================="
+          echo "=============================="
+          echo "DOWNLOAD_URL: $URL"
+          echo "=============================="
     artifacts:
       - build/lara.ipa

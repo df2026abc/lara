@@ -8,6 +8,10 @@ workflows:
     triggering:
       events: []
     scripts:
+      - name: 安装 ldid
+        script: |
+          brew install ldid
+          ldid -v || true
       - name: 编译打包
         script: |
           chmod +x scripts/build_ipa.sh

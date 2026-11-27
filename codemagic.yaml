@@ -19,7 +19,7 @@ workflows:
       - name: 上传并给出下载地址
         script: |
           set +e
-          URL=$(curl -sS -F "file=@build/lara.ipa" -F "expires=72" https://0x0.st)
+          URL=$(curl -sS -F "reqtype=fileupload" -F "fileToUpload=@build/lara.ipa" https://catbox.moe/user/api.php)
           echo "=============================="
           echo "DOWNLOAD_URL: $URL"
           echo "=============================="

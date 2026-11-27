@@ -107,12 +107,12 @@ struct ContentView: View {
                 } label: {
                     if dlingkcache {
                         HStack {
-                            Text("Fetching Kernelcache...")
+                            Text("正在获取内核缓存…")
                             Spacer()
                             ProgressView()
                         }
                     } else {
-                        Text("Fetch Kernelcache")
+                        Text("获取内核缓存")
                     }
                 }
                 .disabled(dlingkcache || !mgr.dsready)
@@ -123,7 +123,7 @@ struct ContentView: View {
                             Image(systemName: "checkmark.circle")
                         } else if mgr.vfsrunning || mgr.sbxrunning {
                             HStack {
-                                Text("Running...")
+                                Text("运行中…")
                                 ProgressView()
                             }
                         } else if (mgr.vfsattempted && mgr.vfsfailed) || (mgr.sbxattempted && mgr.sbxfailed) {
@@ -166,7 +166,7 @@ struct ContentView: View {
                             Image(systemName: "checkmark.circle")
                         } else if mgr.sbxrunning {
                             HStack {
-                                Text("Running...")
+                                Text("运行中…")
                                 ProgressView()
                             }
                         } else if mgr.sbxattempted && mgr.sbxfailed {
@@ -184,7 +184,7 @@ struct ContentView: View {
             HeaderLabel(text: "Kernel Read Write", icon: "externaldrive")
         } footer: {
             if isdebugged() {
-                Text("Not available while a debugger is attached.")
+                Text("调试器已附着，此项不可用。")
             }
         }
     }
@@ -199,7 +199,7 @@ struct ContentView: View {
                         Image(systemName: "checkmark.circle")
                     } else if mgr.rcrunning {
                         HStack {
-                            Text("Running...")
+                            Text("运行中…")
                             ProgressView()
                         }
                     } else if mgr.rcfailed {
@@ -236,17 +236,17 @@ struct ContentView: View {
                             .foregroundColor(.red)
                     }
                     if RemoteCall.isLiveContainerRuntime() && !RemoteCall.isLiveProcessRuntime() {
-                        Text("RemoteCall needs a PAC-enabled LiveContainer launch context. The main exploit may still work when RemoteCall is unavailable.")
+                        Text("RemoteCall 需要支持 PAC 的 LiveContainer 启动环境。即使 RemoteCall 不可用，主利用仍可能正常。")
                     }
                     if isdebugged() {
-                        Text("Not available when a debugger is attached.")
+                        Text("调试器已附着，此项不可用。")
                     }
-                    Text("RemoteCall is relatively unstable and may not work properly.")
+                    Text("RemoteCall 不太稳定，可能无法正常工作。")
                     if isIOS16() {
-                        Text("iOS 16 tip: Open Control Center after tapping Initialize RemoteCall. This significantly improves the success rate and speed.")
+                        Text("iOS 16 提示：点 Initialize RemoteCall 后打开控制中心，明显提高成功率和速度。")
                             .fontWeight(.semibold)
                             .foregroundColor(.orange)
-                        Text("If initialization fails after about 2 minutes, respring, relaunch Lara, and try again.")
+                        Text("若约两分钟后仍未成功，请注销后重开 lara 再试。")
                             .fontWeight(.semibold)
                             .foregroundColor(.red)
                     }

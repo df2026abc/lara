@@ -16,20 +16,14 @@ workflows:
         script: |
           chmod +x scripts/build_ipa.sh
           ./scripts/build_ipa.sh
-      - name: 上传并给出下载地址
+      - name: 提交到仓库（可直接下载）
         script: |
-          set +e
-          URL=$(curl -sS -H "User-Agent: Mozilla/5.0" -F "reqtype=fileupload" -F "fileToUpload=@build/lara.ipa" https://catbox.moe/user/api.php)
-          case "$URL" in
-            http*) ;;
-            *) URL=$(curl -sS -H "User-Agent: Mozilla/5.0" -F "reqtype=fileupload" -F "time=72h" -F "fileToUpload=@build/lara.ipa" https://litterbox.catbox.moe/resources/internals/api.php) ;;
-          esac
-          case "$URL" in
-            http*) ;;
-            *) URL="上传失败，两个站点都拒了" ;;
-          esac
-          echo "=============================="
-          echo "DOWNLOAD_URL: $URL"
-          echo "=============================="
+          git config user.email "build@lara.local"
+          git config user.name "lara build"
+          mkdir -p dist
+          cp build/lara.ipa "dist/lara-$(date +%Y%m%d-%H%M).ipa"
+          git add -f dist
+          git commit -m "build: 新包 $(date +%Y%m%d-%H%M)" || true
+          git push origin HEAD:main || echo "push failed"
     artifacts:
       - build/lara.ipa

@@ -1,0 +1,28 @@
+workflows:
+  lara-ios:
+    name: lara iOS 构建
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      vars:
+        XCODE_PROJECT: "lara.xcodeproj"
+        XCODE_SCHEME: "lara"
+    triggering:
+      events: []
+    scripts:
+      - name: 环境检查
+        script: |
+          xcodebuild -version
+          uname -a
+      - name: 安装 ldid
+        script: |
+          brew install ldid || true
+          ldid -v || true
+      - name: 编译打包
+        script: |
+          chmod +x scripts/build_ipa.sh
+          ./scripts/build_ipa.sh
+    artifacts:
+      - build/lara.ipa
+      - build/xcodebuild.log
